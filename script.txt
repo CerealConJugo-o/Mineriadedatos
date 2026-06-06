@@ -1,0 +1,140 @@
+CREATE TABLE Empleados(
+    NSS BIGINT PRIMARY KEY,
+    Nombre VARCHAR(10),
+    ApellidoP VARCHAR(10),
+    ApellidoM VARCHAR(10),
+    CURPNombre VARCHAR(4),
+    CURPFecha INT,
+    CURPGenero VARCHAR(1) CHECK (CURPGenero IN ('H','M')),
+    CURPEntidad VARCHAR(2),
+    CURPConso VARCHAR(3),
+    CURPDif VARCHAR(2),
+    Telefono_movil BIGINT,
+    Telefono_fijo BIGINT,
+    Correo_nombre VARCHAR(45),
+    Correo_dominio VARCHAR(11),
+    Sexo VARCHAR(10) CHECK (Sexo IN ('Femenino','Masculino')),
+    Calle VARCHAR(50),
+    Numero INT,
+    Colonia VARCHAR(25),
+    CP INT,
+    Delegacion VARCHAR(20),
+    Rol VARCHAR(15),
+    Salario DECIMAL(7,2)
+);
+
+CREATE TABLE Productos(
+    Cod_Producto INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Nombre VARCHAR(20),
+    Cantidad INT,
+    Precio DECIMAL(7,2)
+);
+
+CREATE TABLE Clientes(
+    Telefono_movil BIGINT PRIMARY KEY,
+    Nombre VARCHAR(10),
+    ApellidoP VARCHAR(10),
+    ApellidoM VARCHAR(10),
+    Telefono_fijo BIGINT,
+    Correo_nombre VARCHAR(45),
+    Correo_dominio VARCHAR(11),
+    Sexo VARCHAR(10) CHECK (Sexo IN ('Femenino','Masculino'))
+);
+
+CREATE TABLE Proveedores(
+    Telefono BIGINT PRIMARY KEY,
+    Nombre VARCHAR(20),
+    Correo_nombre VARCHAR(45),
+    Correo_dominio VARCHAR(45)
+);
+
+CREATE TABLE Ventas(
+    Folio INT PRIMARY KEY,
+    Fecha DATE,
+    Servicios VARCHAR(50),
+    Total DECIMAL(7,2),
+    Estado VARCHAR(15),
+    Empleado_FK BIGINT REFERENCES Empleados(NSS)
+);
+
+CREATE TABLE Venta_productos(
+    Ventas_FK INT REFERENCES Ventas(Folio),
+    Productos_FK INT REFERENCES Productos(Cod_Producto),
+    Estado VARCHAR(10),
+    Cantidad INT,
+    Precio DECIMAL(7,2),
+    Subtotal_p DECIMAL(7,2),
+    IVA DECIMAL(7,2),
+    Total DECIMAL(7,2),
+    PRIMARY KEY (Ventas_FK, Productos_FK)
+);
+
+CREATE TABLE Pagos(
+    Fecha DATE,
+    Hora TIME,
+    Ventas_FK INT REFERENCES Ventas(Folio),
+    Monto DECIMAL(7,2),
+    Tipo_pago VARCHAR(20),
+    PRIMARY KEY (Fecha, Hora, Ventas_FK)
+);
+
+CREATE TABLE Pedidos(
+    Numero_pedido INT PRIMARY KEY,
+    Fecha_entrega TIMESTAMP,
+    Fecha_solicitud TIMESTAMP,
+    Estado_pedido VARCHAR(15),
+    Proveedores_FK BIGINT REFERENCES Proveedores(Telefono)
+);
+
+CREATE TABLE Pedido_productos(
+    Pedidos_FK INT REFERENCES Pedidos(Numero_pedido),
+    Productos_FK INT REFERENCES Productos(Cod_Producto),
+    Especif VARCHAR(30),
+    Cantidad INT,
+    PRIMARY KEY (Pedidos_FK, Productos_FK)
+);
+
+CREATE TABLE Examenes(
+    Fecha TIMESTAMP,
+    Empleados_FK BIGINT REFERENCES Empleados(NSS),
+    Resultado VARCHAR(20),
+    Clientes_FK BIGINT REFERENCES Clientes(Telefono_movil),
+    PRIMARY KEY (Fecha, Empleados_FK)
+);
+
+INSERT INTO Proveedores (Nombre, Telefono, Correo_nombre, Correo_dominio)
+VALUES ('OptiSolutions', 8001234567, 'ventas', 'optisolutions.com');
+
+INSERT INTO Productos (Cod_Producto, Nombre, Cantidad, Precio)
+VALUES 
+(1, 'Gafas de Sol', 50, 500.00),
+(2, 'Anteojos Graduados', 20, 1200.00),
+(3, 'Estuche para Gafas', 100, 150.00),
+(4, 'Pañitos de Limpieza', 200, 50.00),
+(5, 'Solución Limpiadora', 75, 80.00);
+
+INSERT INTO Pedidos (Numero_pedido, Fecha_entrega, Fecha_solicitud, Estado_pedido, Proveedores_FK)
+VALUES (101, '2024-11-01', '2024-11-01', 'Entregado', 8001234567);
+
+INSERT INTO Pedidos VALUES
+(102, '2024-11-02', '2024-10-24', 'Entregado', 8009876543),
+(103, '2024-11-03', '2024-10-26', 'Entregado', 8005550199),
+(104, NULL, '2024-10-28', 'En proceso', 8002223333),
+(105, NULL, '2024-10-30', 'En proceso', 8004445555),
+(106, NULL, '2024-10-30', 'En proceso', 8002223333),
+(107, '2024-11-04', '2024-10-22', 'Entregado', 8005550199),
+(108, '2024-11-06', '2024-10-28', 'Entregado', 8004445555),
+(109, '2024-11-01', '2024-10-30', 'Entregado', 8009876543),
+(110, NULL, '2024-10-23', 'En proceso', 8002223333),
+(111, NULL, '2024-10-25', 'En proceso', 8004445555),
+(112, '2024-11-04', '2024-10-26', 'Entregado', 8004445555),
+(113, '2024-11-05', '2024-10-29', 'Entregado', 8004445555),
+(114, '2024-11-06', '2024-10-30', 'Entregado', 8009876543),
+(115, NULL, '2024-11-27', 'En proceso', 8001234567),
+(116, NULL, '2024-11-28', 'En proceso', 8002223333),
+(117, NULL, '2024-10-31', 'En proceso', 8004445555),
+(118, NULL, '2024-10-30', 'En proceso', 8009876543),
+(119, NULL, '2024-10-27', 'En proceso', 8005550199),
+(120, '2024-11-04', '2024-10-25', 'Entregado', 8002223333),
+(121, '2024-11-05', '2024-10-29', 'Entregado', 8002223333),
+(122, '2024-11-06', '2024-10-23', 'Entregado', 8004445555);

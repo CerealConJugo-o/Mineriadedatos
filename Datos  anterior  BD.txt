@@ -1,0 +1,33 @@
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=mibase
+DB_USERNAME=postgres
+DB_PASSWORD=123456
+
+
+public function run()
+    {
+       $process = new Process(['C:\Users\Cerea\AppData\Local\Programs\Python\Python311\python.exe',
+    base_path('python/randomforest.py')
+]);
+        $process->setTimeout(3600);
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+
+            return back()->with(
+                'error',
+                $process->getErrorOutput()
+            );
+        }
+
+        return redirect()
+            ->route('randomforest.index')
+            ->with(
+                'success',
+                'Proceso ejecutado correctamente'
+            );
+    }
