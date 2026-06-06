@@ -35,4 +35,13 @@ COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
 
+RUN mkdir -p storage/logs bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
+
+RUN php artisan config:clear || true
+RUN php artisan route:clear || true
+RUN php artisan view:clear || true
+RUN php artisan cache:clear || true
+
 CMD ["apache2-foreground"]
