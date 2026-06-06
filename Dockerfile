@@ -18,7 +18,7 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
 RUN pip3 install --break-system-packages \
     pandas \
