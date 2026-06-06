@@ -44,4 +44,7 @@ RUN php artisan route:clear || true
 RUN php artisan view:clear || true
 RUN php artisan cache:clear || true
 
+RUN touch storage/logs/laravel.log
+RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 CMD ["apache2-foreground"]
