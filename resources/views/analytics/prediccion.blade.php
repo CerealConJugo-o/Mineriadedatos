@@ -233,7 +233,7 @@
 
         html2pdf().set(opciones).from(elemento).save().then(() => {
             setTimeout(() => {
-                location.reload();
+                window.location.href = "{{ route('linear.index') }}";
             }, 1000);
         });
     }
