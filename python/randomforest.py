@@ -7,7 +7,7 @@ print("INICIANDO PROCESO")
 config = {
     "host": "dpg-d8ibcreq1p3s73ehs3jg-a.oregon-postgres.render.com",
     "database": "covid_j5k2",
-    "user": "render",
+    "user": "root",
     "password": "VgW6Q0UOE1VQEnurU2nIhSPpnhct8M4U",
     "port": "5432",
     "sslmode": "require"
