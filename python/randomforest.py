@@ -7,7 +7,7 @@ print("INICIANDO PROCESO")
 # 1. Configuración de conexión a PostgreSQL usando variables de Render
 config = {
     "host": os.getenv("dpg-d8ibcreq1p3s73ehs3jg-a.oregon-postgres.render.com"),
-    "database": os.getenv("covid_j5k2),
+    "database": os.getenv("covid_j5k2"),
     "user": os.getenv("render"),
     "password": os.getenv("VgW6Q0UOE1VQEnurU2nIhSPpnhct8M4U"),
     "port": os.getenv("DB_PORT", "5432")
