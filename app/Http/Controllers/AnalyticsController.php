@@ -18,14 +18,14 @@ class AnalyticsController extends Controller
     public function prediccionVentas()
     {
         $ventas = Venta::selectRaw("
-                DATE_FORMAT(fecha, '%Y-%m') as periodo,
-                SUM(total) as total
-            ")
-            ->whereNotNull('fecha')
-            ->whereNotNull('total')
-            ->groupByRaw("DATE_FORMAT(fecha, '%Y-%m')")
-            ->orderByRaw("DATE_FORMAT(fecha, '%Y-%m')")
-            ->get();
+        TO_CHAR(fecha, 'YYYY-MM') as periodo,
+        SUM(total) as total
+    ")
+    ->whereNotNull('fecha')
+    ->whereNotNull('total')
+    ->groupByRaw("TO_CHAR(fecha, 'YYYY-MM')")
+    ->orderByRaw("TO_CHAR(fecha, 'YYYY-MM')")
+    ->get();
 
         $dataParaPython = [];
 
