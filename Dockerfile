@@ -40,9 +40,9 @@ RUN pip3 install --break-system-packages \
     pandas \
     numpy \
     scikit-learn \
-    mysql-connector-python
-	psycopg2-binary
-
+    mysql-connector-python \
+    psycopg2-binary
+	
 RUN a2enmod rewrite
 
 RUN mkdir -p /var/www/html/storage/logs
