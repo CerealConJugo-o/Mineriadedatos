@@ -41,6 +41,7 @@ RUN pip3 install --break-system-packages \
     numpy \
     scikit-learn \
     mysql-connector-python
+	psycopg2-binary
 
 RUN a2enmod rewrite
 
