@@ -31,7 +31,6 @@ class RandomForestController extends Controller
 
 public function run()
 {
-    // Evita que PHP corte el proceso por tiempo
     set_time_limit(0);
 
     $python = env('PYTHON_PATH');
@@ -41,7 +40,6 @@ public function run()
     $comando = "\"{$python}\" \"{$script}\"";
 
     $salida = [];
-
     $codigo = 0;
 
     exec(
@@ -50,12 +48,21 @@ public function run()
         $codigo
     );
 
-    return response(
-        "<pre>" .
-        "Código de salida: " . $codigo . "\n\n" .
-        implode("\n", $salida) .
-        "</pre>"
-    );
+    if ($codigo === 0) {
+        return redirect()
+            ->route('randomforest.index')
+            ->with(
+                'success',
+                'Random Forest ejecutado correctamente.'
+            );
+    }
+
+    return redirect()
+        ->route('randomforest.index')
+        ->with(
+            'error',
+            implode("\n", $salida)
+        );
 }
     public function results()
     {
