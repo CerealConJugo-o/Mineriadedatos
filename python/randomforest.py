@@ -9,8 +9,10 @@ config = {
     "database": "covid_j5k2",
     "user": "render",
     "password": "VgW6Q0UOE1VQEnurU2nIhSPpnhct8M4U",
-    "port": "5432"
+    "port": "5432",
+    "sslmode": "require"
 }
+
 # 2. Lista de palabras clave para identificar mortalidad
 palabras_clave = [
     "falleció",
