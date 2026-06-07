@@ -95,4 +95,21 @@ class DatosController extends Controller
                 'Dataset cargado correctamente'
             );
     }
+
+    public function destroy($id)
+{
+    $dataset = Dataset::findOrFail($id);
+
+    $ruta = public_path('datasets/' . $dataset->archivo);
+
+    if ($dataset->archivo && file_exists($ruta)) {
+        unlink($ruta);
+    }
+
+    $dataset->delete();
+
+    return redirect()
+        ->route('datos.index')
+        ->with('success', 'Dataset eliminado correctamente.');
+}
 }

@@ -57,6 +57,9 @@ Route::post('/datos/upload', [DatosController::class, 'upload'])
 Route::get('/datos/{dataset}', [DatosController::class, 'show'])
     ->name('datos.show');
 
+Route::delete('/datos/{id}', [DatosController::class, 'destroy'])
+    ->name('datos.destroy');
+
     //RUTAS ALGORITMOS
     //RANDOM FOREST
 

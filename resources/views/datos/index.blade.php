@@ -2,6 +2,12 @@
 
 @section('content')
 
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="container-fluid">
 
     <div class="card">
@@ -67,12 +73,27 @@
 
                         <td>
 
-                            <a href="{{ route('datos.show', $dataset->id) }}"
-                               class="btn btn-primary btn-sm">
-
-                                Ver Datos
-
+                            <<div class="d-flex gap-2">
+                                <a href="{{ route('datos.show', $dataset->id) }}"
+                                class="btn btn-primary btn-sm">
+                                Ver datos
                             </a>
+
+    <form action="{{ route('datos.destroy', $dataset->id) }}"
+          method="POST"
+          onsubmit="return confirm('¿Seguro que deseas eliminar este dataset?')">
+
+        @csrf
+        @method('DELETE')
+
+        <button type="submit"
+                class="btn btn-danger btn-sm">
+            Eliminar
+        </button>
+
+    </form>
+
+</div>
 
                         </td>
 
