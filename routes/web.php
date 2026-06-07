@@ -38,7 +38,7 @@ use App\Http\Controllers\DatosController;
     // Redirección y Dashboard
     Route::get('/', function () { return redirect()->route('dashboard'); });
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-
+    
     // =============================================================
     // 1. ÁREA ADMINISTRATIVA (RRHH y NÓMINA)
     // =============================================================

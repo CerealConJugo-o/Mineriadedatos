@@ -1,157 +1,119 @@
 @extends('layouts.app')
 
 @section('content')
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <div class="container-fluid">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 text-dark fw-bold">
-            Dashboard de Minería de Datos
-        </h2>
+    <h2 class="fw-bold mb-4">
+        Dashboard de Minería de Datos
+    </h2>
+
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 bg-primary text-white">
+                <div class="card-body">
+                    <h6>Registros COVID</h6>
+                    <h2>{{ number_format($totalRegistros) }}</h2>
+                    <small>Tabla registro_a</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 bg-success text-white">
+                <div class="card-body">
+                    <h6>Ventas registradas</h6>
+                    <h2>{{ number_format($ventas) }}</h2>
+                    <small>Total: ${{ number_format($totalVentas, 2) }}</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 bg-danger text-white">
+                <div class="card-body">
+                    <h6>Fallecidos detectados</h6>
+                    <h2>{{ number_format($fallecidos) }}</h2>
+                    <small>Mortalidad = 1</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 bg-info text-white">
+                <div class="card-body">
+                    <h6>Datasets cargados</h6>
+                    <h2>{{ number_format($datasets) }}</h2>
+                    <small>Archivos CSV disponibles</small>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="row g-4">
+    <div class="row mb-4">
 
-        <!-- DATOS CARGADOS -->
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">
-                        <i class="bi bi-database-fill me-2"></i>
-                        Datos cargados
-                    </h5>
-                </div>
-                <div class="card-body">
-
-                    <h1 class="display-4 fw-bold text-primary">0</h1>
-
-                    <p class="text-muted mb-0">
-                        Registros actualmente disponibles para análisis.
-                    </p>
-
-                    <hr>
-
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            Dataset principal: Sin cargar
-                        </li>
-                        <li class="list-group-item">
-                            Última actualización: --
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- ÚLTIMOS PROCESOS -->
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">
-                        <i class="bi bi-cpu-fill me-2"></i>
-                        Últimos procesos realizados
-                    </h5>
-                </div>
-                <div class="card-body">
-
-                    <div class="alert alert-light border">
-                        No se han ejecutado procesos.
-                    </div>
-
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            Regresión Lineal
-                            <span class="badge bg-secondary float-end">
-                                Pendiente
-                            </span>
-                        </li>
-
-                        <li class="list-group-item">
-                            KDD
-                            <span class="badge bg-secondary float-end">
-                                Pendiente
-                            </span>
-                        </li>
-
-                        <li class="list-group-item">
-                            Random Forest
-                            <span class="badge bg-secondary float-end">
-                                Pendiente
-                            </span>
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- RENDIMIENTO -->
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
                 <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">
-                        <i class="bi bi-graph-up-arrow me-2"></i>
-                        Rendimiento de los modelos
-                    </h5>
+                    Rendimiento mensual de ventas
                 </div>
 
                 <div class="card-body">
+                    <canvas id="ventasChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
 
-                    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-success text-white">
+                    Procesos del sistema
+                </div>
 
-                        <div class="col-md-3">
-                            <h6>Regresión Lineal</h6>
-                            <div class="display-6 text-primary">
-                                --
-                            </div>
-                            <small class="text-muted">
-                                Precisión
-                            </small>
+                <div class="card-body">
+                    @foreach($procesos as $proceso)
+                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                            <span>{{ $proceso['nombre'] }}</span>
+                            <span class="badge bg-{{ $proceso['color'] }}">
+                                {{ $proceso['estado'] }}
+                            </span>
                         </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
 
-                        <div class="col-md-3">
-                            <h6>Random Forest</h6>
-                            <div class="display-6 text-success">
-                                --
-                            </div>
-                            <small class="text-muted">
-                                Precisión
-                            </small>
-                        </div>
+    </div>
 
-                        <div class="col-md-3">
-                            <h6>K-Means</h6>
-                            <div class="display-6 text-warning">
-                                --
-                            </div>
-                            <small class="text-muted">
-                                Clusters
-                            </small>
-                        </div>
+    <div class="row">
 
-                        <div class="col-md-3">
-                            <h6>Red Neuronal</h6>
-                            <div class="display-6 text-danger">
-                                --
-                            </div>
-                            <small class="text-muted">
-                                Precisión
-                            </small>
-                        </div>
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    Random Forest - Mortalidad
+                </div>
 
-                    </div>
+                <div class="card-body">
+                    <canvas id="mortalidadChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
 
-                    <hr>
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-dark text-white">
+                    Estado general
+                </div>
 
-                    <div class="text-center text-muted py-5">
-                        <i class="bi bi-bar-chart-line"
-                           style="font-size: 5rem;"></i>
-
-                        <p class="mt-3">
-                            Aquí se mostrará la gráfica comparativa de los modelos.
-                        </p>
-                    </div>
-
+                <div class="card-body">
+                    <p>Laravel en Render: <span class="badge bg-success">Activo</span></p>
+                    <p>PostgreSQL: <span class="badge bg-success">Conectado</span></p>
+                    <p>Python: <span class="badge bg-success">Disponible</span></p>
+                    <p>Minería de datos: <span class="badge bg-primary">Operativa</span></p>
                 </div>
             </div>
         </div>
@@ -159,4 +121,42 @@
     </div>
 
 </div>
+
+<script>
+    const labelsVentas = {!! json_encode($labelsVentas) !!};
+    const dataVentas = {!! json_encode($dataVentas) !!};
+
+    new Chart(document.getElementById('ventasChart'), {
+        type: 'line',
+        data: {
+            labels: labelsVentas,
+            datasets: [{
+                label: 'Ventas por mes',
+                data: dataVentas,
+                fill: true,
+                tension: 0.2
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    new Chart(document.getElementById('mortalidadChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Falleció', 'Vivió'],
+            datasets: [{
+                data: [
+                    {{ $fallecidos }},
+                    {{ $vivos }}
+                ]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+
 @endsection
