@@ -62,6 +62,10 @@ RUN php artisan route:clear || true
 RUN php artisan view:clear || true
 RUN php artisan cache:clear || true
 
+RUN mkdir -p /var/www/html/public/datasets
+RUN chown -R www-data:www-data /var/www/html/public/datasets
+RUN chmod -R 775 /var/www/html/public/datasets
+
 EXPOSE 80
 
 CMD ["apache2-foreground"]
