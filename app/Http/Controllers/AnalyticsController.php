@@ -149,7 +149,7 @@ class AnalyticsController extends Controller
 
         $jsonInput = json_encode($dataParaPython);
 
-        $pythonPath = env('PYTHON_PATH');
+        $pythonPath = env('PYTHON_PATH','/usr/bin/python3');
         $script = base_path('analytics/prediccion.py');
 
         $comando = "\"{$pythonPath}\" \"{$script}\"";
