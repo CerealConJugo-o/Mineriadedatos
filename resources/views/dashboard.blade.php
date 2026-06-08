@@ -4,16 +4,89 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<style>
+    body {
+        background: #F8FAFC;
+    }
+
+    .dashboard-title {
+        color: #0F172A;
+        font-weight: 800;
+    }
+
+    .dashboard-subtitle {
+        color: #64748B;
+        font-size: 14px;
+    }
+
+    .stat-card {
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .stat-card h6 {
+        opacity: 0.85;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-card h2 {
+        font-weight: 800;
+    }
+
+    .custom-card {
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .custom-header-dark {
+        background: #0F172A;
+        color: white;
+        font-weight: 600;
+    }
+
+    .custom-header-accent {
+        background: #14B8A6;
+        color: white;
+        font-weight: 600;
+    }
+
+    .accent-badge {
+        background: #14B8A6;
+        color: white;
+        border-radius: 12px;
+        padding: 6px 10px;
+    }
+
+    .dark-badge {
+        background: #0F172A;
+        color: white;
+        border-radius: 12px;
+        padding: 6px 10px;
+    }
+
+    .soft-text {
+        color: #64748B;
+    }
+</style>
+
 <div class="container-fluid">
 
-    <h2 class="fw-bold mb-4">
-        Dashboard de Minería de Datos
-    </h2>
+    <div class="mb-4">
+        <h2 class="dashboard-title mb-1">
+            Panel de control - Minería de Datos
+        </h2>
+        <p class="dashboard-subtitle">
+            Monitoreo general de registros, ventas, datasets y algoritmos del sistema.
+        </p>
+    </div>
 
     <div class="row mb-4">
 
-        <div class="col-md-3">
-            <div class="card shadow border-0 bg-primary text-white">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow border-0 text-white stat-card"
+                 style="background:#0F172A;">
                 <div class="card-body">
                     <h6>Registros COVID</h6>
                     <h2>{{ number_format($totalRegistros) }}</h2>
@@ -22,8 +95,9 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow border-0 bg-success text-white">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow border-0 text-white stat-card"
+                 style="background:#14B8A6;">
                 <div class="card-body">
                     <h6>Ventas registradas</h6>
                     <h2>{{ number_format($ventas) }}</h2>
@@ -32,8 +106,9 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow border-0 bg-danger text-white">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow border-0 text-white stat-card"
+                 style="background:#0F172A;">
                 <div class="card-body">
                     <h6>Fallecidos detectados</h6>
                     <h2>{{ number_format($fallecidos) }}</h2>
@@ -42,8 +117,9 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow border-0 bg-info text-white">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow border-0 text-white stat-card"
+                 style="background:#14B8A6;">
                 <div class="card-body">
                     <h6>Datasets cargados</h6>
                     <h2>{{ number_format($datasets) }}</h2>
@@ -56,9 +132,9 @@
 
     <div class="row mb-4">
 
-        <div class="col-md-8">
-            <div class="card shadow border-0">
-                <div class="card-header bg-dark text-white">
+        <div class="col-md-8 mb-3">
+            <div class="card shadow border-0 custom-card">
+                <div class="card-header custom-header-dark">
                     Rendimiento mensual de ventas
                 </div>
 
@@ -68,9 +144,9 @@
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow border-0">
-                <div class="card-header bg-success text-white">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow border-0 custom-card">
+                <div class="card-header custom-header-accent">
                     Procesos del sistema
                 </div>
 
@@ -78,9 +154,16 @@
                     @foreach($procesos as $proceso)
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span>{{ $proceso['nombre'] }}</span>
-                            <span class="badge bg-{{ $proceso['color'] }}">
-                                {{ $proceso['estado'] }}
-                            </span>
+
+                            @if($proceso['estado'] === 'Listo' || $proceso['estado'] === 'Ejecutado')
+                                <span class="accent-badge">
+                                    {{ $proceso['estado'] }}
+                                </span>
+                            @else
+                                <span class="dark-badge">
+                                    {{ $proceso['estado'] }}
+                                </span>
+                            @endif
                         </div>
                     @endforeach
                 </div>
@@ -91,9 +174,9 @@
 
     <div class="row">
 
-        <div class="col-md-6">
-            <div class="card shadow border-0">
-                <div class="card-header bg-primary text-white">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow border-0 custom-card">
+                <div class="card-header custom-header-accent">
                     Random Forest - Mortalidad
                 </div>
 
@@ -103,17 +186,36 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card shadow border-0">
-                <div class="card-header bg-dark text-white">
+        <div class="col-md-6 mb-3">
+            <div class="card shadow border-0 custom-card">
+                <div class="card-header custom-header-dark">
                     Estado general
                 </div>
 
                 <div class="card-body">
-                    <p>Laravel en Render: <span class="badge bg-success">Activo</span></p>
-                    <p>PostgreSQL: <span class="badge bg-success">Conectado</span></p>
-                    <p>Python: <span class="badge bg-success">Disponible</span></p>
-                    <p>Minería de datos: <span class="badge bg-primary">Operativa</span></p>
+                    <p>
+                        Laravel en Render:
+                        <span class="accent-badge">Activo</span>
+                    </p>
+
+                    <p>
+                        PostgreSQL:
+                        <span class="accent-badge">Conectado</span>
+                    </p>
+
+                    <p>
+                        Python:
+                        <span class="accent-badge">Disponible</span>
+                    </p>
+
+                    <p>
+                        Minería de datos:
+                        <span class="dark-badge">Operativa</span>
+                    </p>
+
+                    <p class="soft-text mt-3 mb-0">
+                        El sistema se encuentra desplegado en la nube y conectado a una base de datos PostgreSQL.
+                    </p>
                 </div>
             </div>
         </div>
@@ -134,11 +236,36 @@
                 label: 'Ventas por mes',
                 data: dataVentas,
                 fill: true,
-                tension: 0.2
+                tension: 0.3,
+                borderColor: '#14B8A6',
+                backgroundColor: 'rgba(20,184,166,0.15)',
+                borderWidth: 3,
+                pointBackgroundColor: '#0F172A',
+                pointBorderColor: '#14B8A6',
+                pointRadius: 4
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#0F172A'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#64748B'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: '#64748B'
+                    }
+                }
+            }
         }
     });
 
@@ -150,11 +277,24 @@
                 data: [
                     {{ $fallecidos }},
                     {{ $vivos }}
-                ]
+                ],
+                backgroundColor: [
+                    '#0F172A',
+                    '#14B8A6'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 3
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#0F172A'
+                    }
+                }
+            }
         }
     });
 </script>
