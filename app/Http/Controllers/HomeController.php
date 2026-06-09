@@ -35,6 +35,17 @@ class HomeController extends Controller
         $labelsVentas = $ventasPorMes->pluck('periodo');
         $dataVentas = $ventasPorMes->pluck('total');
 
+        // Últimos resultados persistidos de los algoritmos de minería.
+        $kddRes = DB::table('resultados_algoritmos')
+            ->where('algoritmo', 'kdd')
+            ->latest('id')
+            ->first();
+
+        $neuralRes = DB::table('resultados_algoritmos')
+            ->where('algoritmo', 'neural')
+            ->latest('id')
+            ->first();
+
         $procesos = [
             [
                 'nombre' => 'Regresión Lineal',
@@ -48,15 +59,32 @@ class HomeController extends Controller
             ],
             [
                 'nombre' => 'KDD',
-                'estado' => 'Pendiente',
-                'color' => 'secondary',
+                'estado' => $kddRes ? 'Ejecutado' : 'Pendiente',
+                'color' => $kddRes ? 'success' : 'secondary',
             ],
             [
                 'nombre' => 'Red Neuronal',
-                'estado' => 'Pendiente',
-                'color' => 'secondary',
+                'estado' => $neuralRes ? 'Ejecutado' : 'Pendiente',
+                'color' => $neuralRes ? 'success' : 'secondary',
             ],
         ];
+
+        // Datos para la gráfica comparativa de desempeño de algoritmos.
+        $algoLabels = [];
+        $algoExactitud = [];
+        $algoF1 = [];
+
+        if ($kddRes) {
+            $algoLabels[] = 'KDD';
+            $algoExactitud[] = (float) $kddRes->exactitud;
+            $algoF1[] = (float) $kddRes->f1;
+        }
+
+        if ($neuralRes) {
+            $algoLabels[] = 'Red Neuronal';
+            $algoExactitud[] = (float) $neuralRes->exactitud;
+            $algoF1[] = (float) $neuralRes->f1;
+        }
 
         return view('dashboard', compact(
             'totalRegistros',
@@ -67,7 +95,12 @@ class HomeController extends Controller
             'totalVentas',
             'labelsVentas',
             'dataVentas',
-            'procesos'
+            'procesos',
+            'kddRes',
+            'neuralRes',
+            'algoLabels',
+            'algoExactitud',
+            'algoF1'
         ));
     }
 }
