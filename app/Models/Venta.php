@@ -14,6 +14,8 @@ class Venta extends Model
 
     protected $keyType = 'int';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'folio',
         'fecha',
