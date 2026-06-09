@@ -27,4 +27,57 @@ class NeuralNetworkController extends Controller
             )
         );
     }
+
+    /**
+     * Ejecuta el script de Python que entrena la Red Neuronal (MLPClassifier)
+     * y devuelve las métricas a la vista. El script es de SOLO LECTURA.
+     */
+    public function run()
+    {
+        set_time_limit(0);
+
+        $python = env('PYTHON_PATH', 'python');
+        $script = base_path('python/red_neuronal.py');
+
+        $comando = "\"{$python}\" \"{$script}\"";
+
+        $salida = [];
+        $codigo = 0;
+
+        exec($comando . " 2>&1", $salida, $codigo);
+
+        // El script imprime líneas de progreso y, al final, una línea JSON
+        // (que empieza con '{'). Buscamos esa línea y la decodificamos.
+        $resultado = null;
+
+        foreach ($salida as $linea) {
+            $linea = trim($linea);
+
+            if (str_starts_with($linea, '{')) {
+                $decodificado = json_decode($linea, true);
+
+                if (is_array($decodificado)) {
+                    $resultado = $decodificado;
+                }
+            }
+        }
+
+        // Si el script reportó un error interno dentro del JSON.
+        if ($resultado && isset($resultado['error'])) {
+            return redirect()
+                ->route('neural.index')
+                ->with('error', $resultado['error']);
+        }
+
+        if ($codigo === 0 && $resultado) {
+            return redirect()
+                ->route('neural.index')
+                ->with('resultado_neural', $resultado)
+                ->with('success', 'Red Neuronal entrenada y evaluada correctamente.');
+        }
+
+        return redirect()
+            ->route('neural.index')
+            ->with('error', implode("\n", $salida));
+    }
 }

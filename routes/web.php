@@ -70,7 +70,10 @@ Route::delete('/datos/{id}', [DatosController::class, 'destroy'])
     //REGRESION LINEAL
     Route::get('/linear-regression',[AnalyticsController::class, 'index'])->name('linear.index');    Route::get('/neural-network',[NeuralNetworkController::class, 'index'])->name('neural.index');
     Route::get('/kdd',[KDDController::class, 'index'])->name('kdd.index');
-    
+
+    // --- Algoritmos de minería implementados por Jona044 (KDD + Red Neuronal) ---
+    Route::post('/neural-network/run',[NeuralNetworkController::class, 'run'])->name('neural.run');
+
     // =============================================================
     // 2. CLIENTES
     // =============================================================
