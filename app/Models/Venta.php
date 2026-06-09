@@ -19,35 +19,5 @@ class Venta extends Model
         'fecha',
         'servicios',
         'total',
-        'estado',
-        'empleado_fk',
-        'created_at',
-        'updated_at'
     ];
-
-    public function productos()
-    {
-        return $this->belongsToMany(
-            Producto::class,
-            'venta_productos',
-            'ventas_fk',
-            'productos_fk'
-        )->withPivot([
-            'estado',
-            'cantidad',
-            'precio',
-            'subtotal_p',
-            'iva',
-            'total'
-        ]);
-    }
-
-    public function empleado()
-    {
-        return $this->belongsTo(
-            Empleado::class,
-            'empleado_fk',
-            'id_a'
-        );
-    }
 }

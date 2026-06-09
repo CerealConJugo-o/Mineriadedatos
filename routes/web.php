@@ -112,6 +112,8 @@ Route::delete('/datos/{id}', [DatosController::class, 'destroy'])
         Route::get('/ventas', [VentaController::class, 'index'])->name('ventas.index');
         Route::get('/ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
     });
+    
+    Route::resource('ventas', VentaController::class);
 
     // =============================================================
     // 4. ÁREA INVENTARIO (Productos y Proveedores)

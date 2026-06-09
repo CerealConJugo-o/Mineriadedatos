@@ -2,6 +2,13 @@
 
 <?php $__env->startSection('content'); ?>
 
+<?php if(session('success')): ?>
+    <div class="alert alert-success">
+        <?php echo e(session('success')); ?>
+
+    </div>
+<?php endif; ?>
+
 <div class="container-fluid">
 
     <div class="card">
@@ -67,12 +74,22 @@
 
                         <td>
 
-                            <a href="<?php echo e(route('datos.show', $dataset->id)); ?>"
-                               class="btn btn-primary btn-sm">
-
-                                Ver Datos
-
+                            <div class="d-flex gap-2">
+                                <a href="<?php echo e(route('datos.show', $dataset->id)); ?>"
+                                class="btn btn-primary btn-sm">
+                                Ver datos
                             </a>
+                            <form action="<?php echo e(route('datos.destroy', $dataset->id)); ?>"
+                            method="POST"
+                            onsubmit="return confirm('¿Seguro que deseas eliminar este dataset?')">
+                                                        <?php echo csrf_field(); ?>
+                                                        <?php echo method_field('DELETE'); ?>
+                                                        <button type="submit"
+                                                        class="btn btn-danger btn-sm">
+                                                        Eliminar
+                                                    </button>
+                                                    </form>
+                                                </div>
 
                         </td>
 

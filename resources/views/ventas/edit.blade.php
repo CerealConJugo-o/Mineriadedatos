@@ -5,7 +5,7 @@
 <div class="container-fluid">
 
     <h2 class="fw-bold mb-4">
-        Registrar nueva venta
+        Editar venta #{{ $venta->folio }}
     </h2>
 
     @if ($errors->any())
@@ -21,18 +21,18 @@
     <div class="card shadow border-0">
         <div class="card-body">
 
-            <form action="{{ route('ventas.store') }}" method="POST">
+            <form action="{{ route('ventas.update', $venta->folio) }}" method="POST">
                 @csrf
+                @method('PUT')
 
                 <div class="row">
 
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Folio</label>
                         <input type="number"
-                               name="folio"
                                class="form-control"
-                               value="{{ old('folio', $siguienteFolio) }}"
-                               required>
+                               value="{{ $venta->folio }}"
+                               disabled>
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -40,17 +40,17 @@
                         <input type="date"
                                name="fecha"
                                class="form-control"
-                               value="{{ old('fecha', date('Y-m-d')) }}"
+                               value="{{ old('fecha', $venta->fecha) }}"
                                required>
                     </div>
+
 
                     <div class="col-md-8 mb-3">
                         <label class="form-label">Servicios</label>
                         <input type="text"
                                name="servicios"
                                class="form-control"
-                               value="{{ old('servicios') }}"
-                               placeholder="Ej: Examen para la vista, Reparación">
+                               value="{{ old('servicios', $venta->servicios) }}">
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -59,7 +59,7 @@
                                step="0.01"
                                name="total"
                                class="form-control"
-                               value="{{ old('total') }}"
+                               value="{{ old('total', $venta->total) }}"
                                required>
                     </div>
 
@@ -70,8 +70,8 @@
                         Cancelar
                     </a>
 
-                    <button class="btn btn-success">
-                        Guardar venta
+                    <button class="btn btn-primary">
+                        Actualizar venta
                     </button>
                 </div>
 

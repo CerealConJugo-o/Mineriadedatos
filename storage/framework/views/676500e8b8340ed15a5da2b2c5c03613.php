@@ -1,6 +1,6 @@
-@extends('layouts.app')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 
 <div class="container-fluid">
 
@@ -9,16 +9,17 @@
             Ventas
         </h2>
 
-        <a href="{{ route('ventas.create') }}" class="btn btn-success">
+        <a href="<?php echo e(route('ventas.create')); ?>" class="btn btn-success">
             Agregar venta
         </a>
     </div>
 
-    @if(session('success'))
+    <?php if(session('success')): ?>
         <div class="alert alert-success">
-            {{ session('success') }}
+            <?php echo e(session('success')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
 
     <div class="card shadow border-0">
         <div class="card-body">
@@ -36,26 +37,26 @@
                     </thead>
 
                     <tbody>
-                        @forelse($ventas as $venta)
+                        <?php $__empty_1 = true; $__currentLoopData = $ventas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $venta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr>
-                                <td>{{ $venta->folio }}</td>
-                                <td>{{ $venta->fecha }}</td>
-                                <td>{{ $venta->servicios ?? 'Sin servicio' }}</td>
-                                <td>${{ number_format($venta->total, 2) }}</td>
+                                <td><?php echo e($venta->folio); ?></td>
+                                <td><?php echo e($venta->fecha); ?></td>
+                                <td><?php echo e($venta->servicios ?? 'Sin servicio'); ?></td>
+                                <td>$<?php echo e(number_format($venta->total, 2)); ?></td>
                                 <td>
                                     <div class="d-flex gap-2">
 
-                                        <a href="{{ route('ventas.edit', $venta->folio) }}"
+                                        <a href="<?php echo e(route('ventas.edit', $venta->folio)); ?>"
                                            class="btn btn-primary btn-sm">
                                             Editar
                                         </a>
 
-                                        <form action="{{ route('ventas.destroy', $venta->folio) }}"
+                                        <form action="<?php echo e(route('ventas.destroy', $venta->folio)); ?>"
                                               method="POST"
                                               onsubmit="return confirm('¿Seguro que deseas eliminar esta venta?')">
 
-                                            @csrf
-                                            @method('DELETE')
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
 
                                             <button class="btn btn-danger btn-sm">
                                                 Borrar
@@ -65,22 +66,24 @@
                                     </div>
                                 </td>
                             </tr>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
                                 <td colspan="7" class="text-center text-muted">
                                     No hay ventas registradas.
                                 </td>
                             </tr>
-                        @endforelse
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
-            {{ $ventas->links() }}
+            <?php echo e($ventas->links()); ?>
+
 
         </div>
     </div>
 
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Cerea\Documents\Tareas\Septimo Semestre\mineria de datos\ProyectoFinal\Proyecto Mineria\resources\views/ventas/index.blade.php ENDPATH**/ ?>

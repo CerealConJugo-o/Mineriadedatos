@@ -241,7 +241,7 @@
 
         html2pdf().set(opciones).from(elemento).save().then(() => {
             setTimeout(() => {
-                location.reload();
+                window.location.href = "<?php echo e(route('linear.index')); ?>";
             }, 1000);
         });
     }

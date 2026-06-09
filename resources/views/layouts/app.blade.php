@@ -179,6 +179,13 @@
     Cargar y ver datos
 </a>
        
+<div class="menu-label">Tablas</div>
+<a href="{{ route('ventas.index') }}"
+   class="{{ request()->routeIs('ventas.*') ? 'active' : '' }}">
+    <i class="bi bi-cash-coin me-2"></i>
+    Ventas
+</a>
+
         </form>
     </div>
 
