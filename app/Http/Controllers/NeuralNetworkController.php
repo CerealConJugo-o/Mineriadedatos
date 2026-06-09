@@ -18,12 +18,23 @@ class NeuralNetworkController extends Controller
             ->where('mortalidad', 0)
             ->count();
 
+        // Último resultado guardado (persiste aunque se cambie de sección).
+        $fila = DB::table('resultados_algoritmos')
+            ->where('algoritmo', 'neural')
+            ->latest('id')
+            ->first();
+
+        $resultado   = $fila ? json_decode($fila->payload, true) : null;
+        $ejecutadoEn = $fila ? $fila->created_at : null;
+
         return view(
             'algorithms.neural',
             compact(
                 'total',
                 'murieron',
-                'vivieron'
+                'vivieron',
+                'resultado',
+                'ejecutadoEn'
             )
         );
     }
@@ -70,9 +81,19 @@ class NeuralNetworkController extends Controller
         }
 
         if ($codigo === 0 && $resultado) {
+            // Persistimos el resultado para que el dashboard y la vista lo
+            // conserven aunque se cambie de sección.
+            DB::table('resultados_algoritmos')->insert([
+                'algoritmo'  => 'neural',
+                'exactitud'  => $resultado['exactitud'] ?? null,
+                'f1'         => $resultado['f1'] ?? null,
+                'payload'    => json_encode($resultado),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             return redirect()
                 ->route('neural.index')
-                ->with('resultado_neural', $resultado)
                 ->with('success', 'Red Neuronal entrenada y evaluada correctamente.');
         }
 

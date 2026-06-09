@@ -57,13 +57,16 @@
 
     </div>
 
-    {{-- RESULTADOS DEL PROCESO KDD (solo aparece tras ejecutar) --}}
-    @if(session('resultado_kdd'))
-        @php $r = session('resultado_kdd'); @endphp
+    {{-- RESULTADOS DEL PROCESO KDD (persistido: se conserva al cambiar de sección) --}}
+    @if(!empty($resultado))
+        @php $r = $resultado; @endphp
 
         <div class="card mt-4 shadow">
-            <div class="card-header bg-dark text-white">
-                Resultados: {{ $r['modelo'] ?? 'KDD' }}
+            <div class="card-header bg-dark text-white d-flex justify-content-between">
+                <span>Resultados: {{ $r['modelo'] ?? 'KDD' }}</span>
+                @if(!empty($ejecutadoEn))
+                    <small class="text-white-50">Última ejecución: {{ $ejecutadoEn }}</small>
+                @endif
             </div>
             <div class="card-body">
 

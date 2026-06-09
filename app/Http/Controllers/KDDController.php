@@ -18,12 +18,23 @@ class KDDController extends Controller
             ->where('mortalidad', 0)
             ->count();
 
+        // Último resultado guardado (persiste aunque se cambie de sección).
+        $fila = DB::table('resultados_algoritmos')
+            ->where('algoritmo', 'kdd')
+            ->latest('id')
+            ->first();
+
+        $resultado   = $fila ? json_decode($fila->payload, true) : null;
+        $ejecutadoEn = $fila ? $fila->created_at : null;
+
         return view(
             'algorithms.kdd',
             compact(
                 'total',
                 'murieron',
-                'vivieron'
+                'vivieron',
+                'resultado',
+                'ejecutadoEn'
             )
         );
     }
@@ -68,9 +79,19 @@ class KDDController extends Controller
         }
 
         if ($codigo === 0 && $resultado) {
+            // Persistimos el resultado para que el dashboard y la vista lo
+            // conserven aunque se cambie de sección.
+            DB::table('resultados_algoritmos')->insert([
+                'algoritmo'  => 'kdd',
+                'exactitud'  => $resultado['exactitud'] ?? null,
+                'f1'         => $resultado['f1'] ?? null,
+                'payload'    => json_encode($resultado),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             return redirect()
                 ->route('kdd.index')
-                ->with('resultado_kdd', $resultado)
                 ->with('success', 'Proceso KDD ejecutado correctamente.');
         }
 
