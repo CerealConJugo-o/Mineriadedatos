@@ -120,12 +120,13 @@ def main():
     }
 
     # Linea final: JSON (el controlador la detecta porque empieza con '{').
-    print(json.dumps(resultado, ensure_ascii=False))
+    # ensure_ascii=True (por defecto) -> salida ASCII pura, segura en Windows.
+    print(json.dumps(resultado))
 
 
 if __name__ == "__main__":
     try:
         main()
     except Exception as err:
-        print(json.dumps({"error": str(err)}, ensure_ascii=False))
+        print(json.dumps({"error": str(err)}))
         sys.exit(1)
