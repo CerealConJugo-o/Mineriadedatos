@@ -172,6 +172,64 @@
 
     </div>
 
+    {{-- Desempeño de los algoritmos de minería (KDD + Red Neuronal) --}}
+    <div class="row mb-4">
+
+        <div class="col-md-7 mb-3">
+            <div class="card shadow border-0 custom-card h-100">
+                <div class="card-header custom-header-accent">
+                    Desempeño de algoritmos de minería
+                </div>
+                <div class="card-body">
+                    @if(count($algoLabels) > 0)
+                        <canvas id="algoChart" height="140"></canvas>
+                    @else
+                        <p class="soft-text mb-0">
+                            Ejecuta KDD o Red Neuronal para ver aquí su desempeño.
+                        </p>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5 mb-3">
+
+            <div class="card shadow border-0 custom-card mb-3">
+                <div class="card-header custom-header-dark">
+                    KDD - Árbol de Decisión
+                </div>
+                <div class="card-body">
+                    @if($kddRes)
+                        <h2 class="mb-0" style="font-weight:800;">{{ $kddRes->exactitud }}%</h2>
+                        <small class="soft-text">Exactitud &middot; F1 {{ $kddRes->f1 }}%</small>
+                        <div><small class="soft-text">Última ejecución: {{ $kddRes->created_at }}</small></div>
+                    @else
+                        <span class="dark-badge">Pendiente</span>
+                        <p class="soft-text mt-2 mb-0">Aún no se ha ejecutado.</p>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card shadow border-0 custom-card">
+                <div class="card-header custom-header-dark">
+                    Red Neuronal - MLPClassifier
+                </div>
+                <div class="card-body">
+                    @if($neuralRes)
+                        <h2 class="mb-0" style="font-weight:800;">{{ $neuralRes->exactitud }}%</h2>
+                        <small class="soft-text">Exactitud &middot; F1 {{ $neuralRes->f1 }}%</small>
+                        <div><small class="soft-text">Última ejecución: {{ $neuralRes->created_at }}</small></div>
+                    @else
+                        <span class="dark-badge">Pendiente</span>
+                        <p class="soft-text mt-2 mb-0">Aún no se ha ejecutado.</p>
+                    @endif
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
     <div class="row">
 
         <div class="col-md-6 mb-3">
@@ -268,6 +326,40 @@
             }
         }
     });
+
+    const algoLabels = {!! json_encode($algoLabels) !!};
+    const algoExactitud = {!! json_encode($algoExactitud) !!};
+    const algoF1 = {!! json_encode($algoF1) !!};
+
+    const algoCanvas = document.getElementById('algoChart');
+    if (algoCanvas && algoLabels.length > 0) {
+        new Chart(algoCanvas, {
+            type: 'bar',
+            data: {
+                labels: algoLabels,
+                datasets: [
+                    {
+                        label: 'Exactitud (%)',
+                        data: algoExactitud,
+                        backgroundColor: '#14B8A6'
+                    },
+                    {
+                        label: 'F1-Score (%)',
+                        data: algoF1,
+                        backgroundColor: '#0F172A'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100, ticks: { color: '#64748B' } },
+                    x: { ticks: { color: '#64748B' } }
+                },
+                plugins: { legend: { labels: { color: '#0F172A' } } }
+            }
+        });
+    }
 
     new Chart(document.getElementById('mortalidadChart'), {
         type: 'doughnut',
