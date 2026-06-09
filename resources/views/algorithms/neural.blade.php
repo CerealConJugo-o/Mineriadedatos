@@ -7,7 +7,10 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>🧠 Redes Neuronales</h2>
 
-        <form action="{{ route('neural.run') }}" method="POST" class="m-0">
+        <form action="{{ route('neural.run') }}" method="POST" class="m-0"
+              onsubmit="if(this.dataset.sent){return false;} this.dataset.sent=1;
+                        var b=this.querySelector('button');
+                        b.innerHTML='&#9203; Procesando algoritmo, espera...';">
             @csrf
             <button class="btn btn-success" type="submit">
                 Ejecutar Algoritmo
@@ -57,16 +60,13 @@
 
     </div>
 
-    {{-- RESULTADOS DEL MODELO (persistido: se conserva al cambiar de sección) --}}
-    @if(!empty($resultado))
-        @php $r = $resultado; @endphp
+    {{-- RESULTADOS DEL MODELO (solo aparecen tras pulsar Ejecutar) --}}
+    @if(session('resultado_neural'))
+        @php $r = session('resultado_neural'); @endphp
 
         <div class="card mt-4 shadow">
-            <div class="card-header bg-dark text-white d-flex justify-content-between">
-                <span>Resultados del modelo: {{ $r['modelo'] ?? 'Red Neuronal' }}</span>
-                @if(!empty($ejecutadoEn))
-                    <small class="text-white-50">Última ejecución: {{ $ejecutadoEn }}</small>
-                @endif
+            <div class="card-header bg-dark text-white">
+                Resultados del modelo: {{ $r['modelo'] ?? 'Red Neuronal' }}
             </div>
             <div class="card-body">
 

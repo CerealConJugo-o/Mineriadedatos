@@ -18,23 +18,14 @@ class KDDController extends Controller
             ->where('mortalidad', 0)
             ->count();
 
-        // Último resultado guardado (persiste aunque se cambie de sección).
-        $fila = DB::table('resultados_algoritmos')
-            ->where('algoritmo', 'kdd')
-            ->latest('id')
-            ->first();
-
-        $resultado   = $fila ? json_decode($fila->payload, true) : null;
-        $ejecutadoEn = $fila ? $fila->created_at : null;
-
+        // La página inicia en blanco: el resultado solo se muestra tras
+        // ejecutar (vía flash). El dashboard es quien lee el histórico de la BD.
         return view(
             'algorithms.kdd',
             compact(
                 'total',
                 'murieron',
-                'vivieron',
-                'resultado',
-                'ejecutadoEn'
+                'vivieron'
             )
         );
     }
@@ -92,6 +83,7 @@ class KDDController extends Controller
 
             return redirect()
                 ->route('kdd.index')
+                ->with('resultado_kdd', $resultado)
                 ->with('success', 'Proceso KDD ejecutado correctamente.');
         }
 

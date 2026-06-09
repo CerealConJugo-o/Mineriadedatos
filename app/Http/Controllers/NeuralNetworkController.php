@@ -18,23 +18,14 @@ class NeuralNetworkController extends Controller
             ->where('mortalidad', 0)
             ->count();
 
-        // Último resultado guardado (persiste aunque se cambie de sección).
-        $fila = DB::table('resultados_algoritmos')
-            ->where('algoritmo', 'neural')
-            ->latest('id')
-            ->first();
-
-        $resultado   = $fila ? json_decode($fila->payload, true) : null;
-        $ejecutadoEn = $fila ? $fila->created_at : null;
-
+        // La página inicia en blanco: el resultado solo se muestra tras
+        // ejecutar (vía flash). El dashboard es quien lee el histórico de la BD.
         return view(
             'algorithms.neural',
             compact(
                 'total',
                 'murieron',
-                'vivieron',
-                'resultado',
-                'ejecutadoEn'
+                'vivieron'
             )
         );
     }
@@ -94,6 +85,7 @@ class NeuralNetworkController extends Controller
 
             return redirect()
                 ->route('neural.index')
+                ->with('resultado_neural', $resultado)
                 ->with('success', 'Red Neuronal entrenada y evaluada correctamente.');
         }
 
