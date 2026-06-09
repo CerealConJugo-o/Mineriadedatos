@@ -73,6 +73,7 @@ Route::delete('/datos/{id}', [DatosController::class, 'destroy'])
 
     // --- Algoritmos de minería implementados por Jona044 (KDD + Red Neuronal) ---
     Route::post('/neural-network/run',[NeuralNetworkController::class, 'run'])->name('neural.run');
+    Route::post('/kdd/run',[KDDController::class, 'run'])->name('kdd.run');
 
     // =============================================================
     // 2. CLIENTES
